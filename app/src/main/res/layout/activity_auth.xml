@@ -18,18 +18,20 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/LoginTextField"
+            android:id="@+id/UsernameTextField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:startIconDrawable="@drawable/user"
-            android:hint="Логин"
+            android:hint="Username"
             android:textSize="20dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/text_input_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_input_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary_black"
+                    android:fontFamily="@font/commissioner_medium"
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -51,9 +53,11 @@
                         android:id="@+id/text_input_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        />
+                        android:textColor="@color/primary_black"
+                        android:fontFamily="@font/commissioner_medium"
+                    />
 
-                </com.google.android.material.textfield.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
 
         <Button
@@ -63,11 +67,29 @@
             android:text="Войти"
             android:height="50dp"
             android:layout_marginTop="140dp"
+            android:fontFamily="@font/commissioner_black"
+            android:textColor="#ffffff"
+            android:textAllCaps="false"
+            android:textSize="18dp"
+            android:background="@drawable/default_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
         </Button>
+
+        <TextView
+            android:id="@+id/sign_in_error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/default_red"
+            android:layout_marginTop="200dp"
+            android:fontFamily="@font/commissioner_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+        </TextView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

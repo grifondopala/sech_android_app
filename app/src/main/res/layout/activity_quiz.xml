@@ -1,69 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/quiz"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Quiz"
-    android:padding="20px">
+    tools:context=".Quiz">
 
-    <TextView
-        android:id="@+id/question_number"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:visibility="visible"
+        android:id="@+id/quiz_loader_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="32dp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        tools:ignore="MissingConstraints" />
-
-    <TextView
-        android:id="@+id/question_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:gravity="left"
-        android:textAlignment="gravity"
-        android:layout_marginTop="40dp"
-        android:textSize="24dp"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/question_number"
-        tools:ignore="MissingConstraints" />
-
-    <TextView
-        android:id="@+id/question_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/question_text"
-        tools:ignore="MissingConstraints" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints"
-        android:id="@+id/answers_container"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/question_label"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_gravity="center">
+
+        <ProgressBar
+            android:id="@+id/progressBar1"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:indeterminateTint="@color/default_blue"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Загрузка вопроса..."
+            android:gravity="left"
+            android:textAlignment="gravity"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/commissioner_black"
+            android:textSize="18dp"
+            android:textColor="@color/primary_black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/progressBar1"
+            tools:ignore="MissingConstraints" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
         android:orientation="vertical"
-        android:layout_marginTop="10dp">
+        android:id="@+id/quiz_end_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints"
+        android:visibility="invisible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Опрос завершен!"
+            android:gravity="left"
+            android:textAlignment="gravity"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/commissioner_black"
+            android:textSize="18dp"
+            android:textColor="@color/primary_black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <Button
+            android:id="@+id/end_quiz_to_main_button"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:textSize="18sp"
+            android:background="@drawable/default_button"
+            android:fontFamily="@font/commissioner_medium"
+            android:text="В главное меню"
+            android:textAllCaps="false"
+            android:textColor="#ffffff" />
 
     </LinearLayout>
 
-    <Button
+    <ScrollView
+        android:visibility="invisible"
+        android:id="@+id/quiz_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Продолжить"
-        tools:ignore="MissingConstraints"
-        android:id="@+id/next_question_button"
-        app:layout_constraintTop_toBottomOf="@+id/answers_container"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_margin="10dp">
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbarThumbVertical="@drawable/scrollbar_thumb"
+        android:scrollbarTrackVertical="@android:color/transparent"
+        tools:context=".Quiz">
 
-    </Button>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="MissingConstraints">
+
+                <TextView
+                    android:id="@+id/question_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:gravity="left"
+                    android:textAlignment="gravity"
+                    android:layout_marginTop="40dp"
+                    android:fontFamily="@font/commissioner_black"
+                    android:textSize="32dp"
+                    android:textColor="@color/primary_black"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:id="@+id/question_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/commissioner_medium"
+                    android:textSize="16dp"
+                    android:textColor="@color/primary_black"
+                    app:layout_constraintTop_toBottomOf="@id/question_text"
+                    tools:ignore="MissingConstraints" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/question_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintTop_toBottomOf="@id/question_label"
+                    android:layout_marginTop="10dp"
+                    app:cardCornerRadius="16dp">
+
+                    <ImageView
+                        android:id="@+id/quiz_main_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/heart" />
+
+                </androidx.cardview.widget.CardView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:ignore="MissingConstraints"
+                    android:id="@+id/answers_container"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/question_image"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp">
+
+                </LinearLayout>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Продолжить"
+                    tools:ignore="MissingConstraints"
+                    android:id="@+id/next_question_button"
+                    app:layout_constraintTop_toBottomOf="@+id/answers_container"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:fontFamily="@font/commissioner_black"
+                    android:textColor="#ffffff"
+                    android:textAllCaps="false"
+                    android:layout_marginTop="20dp"
+                    android:textSize="18dp"
+                    android:background="@drawable/default_button">
+
+                </Button>
+
+                <TextView
+                    android:textAlignment="center"
+                    android:text="Выберите хотя бы один ответ"
+                    android:visibility="invisible"
+                    android:id="@+id/error_quiz_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/commissioner_medium"
+                    android:textSize="16dp"
+                    android:textColor="@color/default_red"
+                    app:layout_constraintBottom_toTopOf="@id/next_question_button"
+                    android:layout_marginBottom="5dp"
+                    tools:ignore="MissingConstraints" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

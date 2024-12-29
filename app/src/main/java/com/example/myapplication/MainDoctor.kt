@@ -35,15 +35,16 @@ class MainDoctor : Fragment() {
 
     private fun getPatients(): Array<PatientDto>{
         return arrayOf(
-            PatientDto(1, "Иван", "Иванович", "Иванов"),
-            PatientDto(2, "Александр", "Александрович", "Александров"),
-            PatientDto(3, "Кирилл", "Кириллович", "Кириллов"),
-            PatientDto(1, "Иван", "Иванович", "Иванов"),
-            PatientDto(2, "Александр", "Александрович", "Александров"),
-            PatientDto(3, "Кирилл", "Кириллович", "Кириллов"),
-            PatientDto(1, "Иван", "Иванович", "Иванов"),
-            PatientDto(2, "Александр", "Александрович", "Александров"),
-            PatientDto(3, "Кирилл", "Кириллович", "Кириллов"),
+              PatientDto("Иван", "Иванович", "Иванов","1231231", "dsdsds", "+712303210231", "avatar")
+//            PatientDto(1, "Иван", "Иванович", "Иванов"),
+//            PatientDto(2, "Александр", "Александрович", "Александров"),
+//            PatientDto(3, "Кирилл", "Кириллович", "Кириллов"),
+//            PatientDto(1, "Иван", "Иванович", "Иванов"),
+//            PatientDto(2, "Александр", "Александрович", "Александров"),
+//            PatientDto(3, "Кирилл", "Кириллович", "Кириллов"),
+//            PatientDto(1, "Иван", "Иванович", "Иванов"),
+//            PatientDto(2, "Александр", "Александрович", "Александров"),
+//            PatientDto(3, "Кирилл", "Кириллович", "Кириллов"),
         )
     }
 
@@ -67,8 +68,8 @@ class MainDoctor : Fragment() {
             layoutParams.height = 200
 
             val patientFIO: TextView = TextView(this.context).apply {
-                text = "${patient.name} ${patient.middleName} ${patient.surname}"
-                setTextColor(ContextCompat.getColor(this.context, R.color.black))
+                text = "${patient.first_name} ${patient.middle_name} ${patient.last_name}";
+                setTextColor(ContextCompat.getColor(this.context, R.color.black));
             }
 
             patientContainer.addView(patientFIO)

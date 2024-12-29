@@ -1,0 +1,12 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@android:color/transparent" /> <!-- Фоновый прозрачный элемент -->
+    <item>
+        <shape>
+            <size
+                android:width="8dp"
+                android:height="30dp" />
+            <solid android:color="@color/primary_black" />
+            <corners android:radius="4dp" />
+        </shape>
+    </item>
+</layer-list>

@@ -1,43 +1,289 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Profile">
 
     <LinearLayout
+        android:id="@+id/profile_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:orientation="vertical"
-        android:padding="20px">
+        android:padding="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:ignore="MissingConstraints"
+            android:layout_gravity="center_horizontal"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Профиль"
-                android:textSize="32dp"
-                android:textStyle="bold"
                 android:textColor="@color/black"
-                android:layout_weight="1" />
+                android:textSize="32sp"
+                android:textStyle="bold" />
 
-                    <Button
-                        android:id="@+id/quit_from_account_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Выйти"
-                        android:height="50dp">
+            <Button
+                android:id="@+id/quit_from_account_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/default_button"
+                android:fontFamily="@font/commissioner_black"
+                android:text="Выйти"
+                android:textAllCaps="false"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
 
-                    </Button>
 
         </LinearLayout>
+
     </LinearLayout>
 
-</FrameLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/profile_avatar_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="MissingConstraints">
+
+                <ImageView
+                    android:id="@+id/profile_avatar_image"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/default_avatar" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/commissioner_medium"
+                        android:text="Хотите изменить фотографию?"
+                        android:textSize="14sp" />
+
+                    <Button
+                        android:id="@+id/upload_avatar_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/default_button"
+                        android:fontFamily="@font/commissioner_black"
+                        android:text="Загрузить"
+                        android:textAllCaps="false"
+                        android:textColor="#ffffff" />
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/profile_avatar_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:ignore="MissingConstraints">
+
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:text="Фамилия:"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/commissioner_medium"/>
+
+                    <TextView
+                        android:id="@+id/profile_last_name_text_view"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:text="Иванов"
+                        android:textAlignment="textStart"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/commissioner_regular"
+                        android:layout_height="wrap_content">
+
+                    </TextView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    tools:ignore="MissingConstraints">
+
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:text="Имя:"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/commissioner_medium"/>
+
+                    <TextView
+                        android:id="@+id/profile_name_text_view"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:text="Иван"
+                        android:textAlignment="textStart"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/commissioner_regular"
+                        android:layout_height="wrap_content">
+
+                    </TextView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    tools:ignore="MissingConstraints">
+
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:text="Отчество:"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/commissioner_medium"/>
+
+                    <TextView
+                        android:id="@+id/profile_middle_name_text_view"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:text="Иванович"
+                        android:textAlignment="textStart"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/commissioner_regular"
+                        android:layout_height="wrap_content">
+
+                    </TextView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    tools:ignore="MissingConstraints">
+
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:text="Телефон:"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/commissioner_medium"/>
+
+                    <TextView
+                        android:id="@+id/profile_phone_text_view"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:text="+79199935869"
+                        android:textAlignment="textStart"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/commissioner_regular"
+                        android:layout_height="wrap_content">
+
+                    </TextView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    tools:ignore="MissingConstraints">
+
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:text="Почта:"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/commissioner_medium"/>
+
+                    <TextView
+                        android:id="@+id/profile_email_text_view"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:text="grgrgrig@gmail.com"
+                        android:textAlignment="textStart"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/commissioner_regular"
+                        android:layout_height="wrap_content">
+
+                    </TextView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    tools:ignore="MissingConstraints">
+
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:text="Снилс:"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/commissioner_medium"/>
+
+                    <TextView
+                        android:id="@+id/profile_snils_text_view"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:text="626-029-036 22"
+                        android:textAlignment="textStart"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/commissioner_regular"
+                        android:layout_height="wrap_content">
+
+                    </TextView>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

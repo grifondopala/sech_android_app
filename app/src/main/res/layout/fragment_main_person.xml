@@ -28,7 +28,8 @@
                 android:text="Главная"
                 android:textSize="32dp"
                 android:textStyle="bold"
-                android:textColor="@color/black"
+                android:fontFamily="@font/commissioner_medium"
+                android:textColor="#333333"
                 android:layout_weight="1" />
 
 
@@ -40,23 +41,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Пройти опрос"
+            android:textSize="18dp"
+            android:textAllCaps="false"
             android:height="50dp"
+            android:textColor="#ffffff"
+            android:background="@drawable/default_button"
             android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:fontFamily="@font/commissioner_black"
             app:layout_constraintTop_toTopOf="parent">
 
         </Button>
 
+        <TextView
+            app:layout_constraintTop_toBottomOf="@+id/move_to_questions_button"
+            android:id="@+id/main_person_error_quiz_text_view"
+            android:fontFamily="@font/commissioner_medium"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="Вы не можете сейчас пройти тест"
+        />
+
+
+
     </LinearLayout>
-
-
-<!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
-<!--        android:id="@+id/bottom_navigation"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:theme="@style/Theme.MaterialComponents.Light.Dialog.FixedSize"-->
-<!--        app:menu="@menu/bottom_navigation_menu" />-->
-
 
 </FrameLayout>
