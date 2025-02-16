@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,18 +26,20 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Профиль"
-                android:textColor="@color/black"
+                android:textColor="@color/primary_black"
                 android:textSize="32sp"
                 android:textStyle="bold" />
 
             <Button
                 android:id="@+id/quit_from_account_button"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="30dp"
+                android:gravity="center"
                 android:background="@drawable/default_button"
                 android:fontFamily="@font/commissioner_black"
                 android:text="Выйти"
                 android:textAllCaps="false"
+                android:layout_gravity="center_vertical"
                 android:textColor="#ffffff"
                 android:textSize="14sp" />
 
@@ -55,8 +57,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp">
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/profile_avatar_container"
@@ -74,10 +76,11 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp"
                     android:gravity="center"
                     android:orientation="vertical"
+                    android:layout_marginLeft="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/profile_avatar_image"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -127,7 +130,7 @@
                         android:id="@+id/profile_last_name_text_view"
                         android:layout_weight="1"
                         android:layout_width="0dp"
-                        android:text="Иванов"
+                        android:text="-"
                         android:textAlignment="textStart"
                         android:textSize="18sp"
                         android:fontFamily="@font/commissioner_regular"
@@ -156,7 +159,7 @@
                         android:id="@+id/profile_name_text_view"
                         android:layout_weight="1"
                         android:layout_width="0dp"
-                        android:text="Иван"
+                        android:text="-"
                         android:textAlignment="textStart"
                         android:textSize="18sp"
                         android:fontFamily="@font/commissioner_regular"
@@ -184,7 +187,7 @@
                         android:id="@+id/profile_middle_name_text_view"
                         android:layout_weight="1"
                         android:layout_width="0dp"
-                        android:text="Иванович"
+                        android:text="-"
                         android:textAlignment="textStart"
                         android:textSize="18sp"
                         android:fontFamily="@font/commissioner_regular"
@@ -212,7 +215,7 @@
                         android:id="@+id/profile_phone_text_view"
                         android:layout_weight="1"
                         android:layout_width="0dp"
-                        android:text="+79199935869"
+                        android:text="-"
                         android:textAlignment="textStart"
                         android:textSize="18sp"
                         android:fontFamily="@font/commissioner_regular"
@@ -241,7 +244,7 @@
                         android:id="@+id/profile_email_text_view"
                         android:layout_weight="1"
                         android:layout_width="0dp"
-                        android:text="grgrgrig@gmail.com"
+                        android:text="-"
                         android:textAlignment="textStart"
                         android:textSize="18sp"
                         android:fontFamily="@font/commissioner_regular"
@@ -269,7 +272,7 @@
                         android:id="@+id/profile_snils_text_view"
                         android:layout_weight="1"
                         android:layout_width="0dp"
-                        android:text="626-029-036 22"
+                        android:text="-"
                         android:textAlignment="textStart"
                         android:textSize="18sp"
                         android:fontFamily="@font/commissioner_regular"

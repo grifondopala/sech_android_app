@@ -8,7 +8,23 @@
     android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
     tools:context=".Auth">
 
+    <TextView
+        android:id="@+id/auth_title_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Авторизация"
+        android:textSize="32sp"
+        android:textAlignment="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/auth_form"
+        android:textColor="@color/primary_black"
+        android:fontFamily="@font/commissioner_black"
+        tools:ignore="MissingConstraints">
+
+    </TextView>
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/auth_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints"
@@ -17,47 +33,47 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/UsernameTextField"
+        <EditText
+            android:id="@+id/text_input_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:startIconDrawable="@drawable/user"
             android:hint="Username"
-            android:textSize="20dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            android:height="50dp"
+            android:textSize="20sp"
+            android:textColor="@color/primary_black"
+            android:fontFamily="@font/commissioner_medium"
+            android:minLines="1"
+            android:drawableStart="@drawable/user"
+            android:drawablePadding="8dp"
+            android:padding="16dp"
+            android:background="@drawable/edit_text_background"
+            android:inputType="text"
+            android:textColorHighlight="@android:color/transparent"
+            android:popupBackground="@android:color/transparent"
+        />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/text_input_username"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/primary_black"
-                    android:fontFamily="@font/commissioner_medium"
-                />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/PasswordTextField"
+        <EditText
+            android:id="@+id/text_input_password"
             android:layout_width="match_parent"
+            android:height="50dp"
             android:layout_height="wrap_content"
             android:hint="Пароль"
-            android:textSize="20dp"
+            android:background="@drawable/edit_text_background"
+            android:textSize="20sp"
+            android:textColor="@color/primary_black"
+            android:fontFamily="@font/commissioner_medium"
+            android:minLines="1"
+            android:drawableStart="@drawable/padlock"
+            android:drawablePadding="8dp"
+            android:padding="16dp"
+            android:inputType="textPassword"
             android:layout_marginTop="70dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:startIconDrawable="@drawable/padlock"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/text_input_password"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/primary_black"
-                        android:fontFamily="@font/commissioner_medium"
-                    />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            android:textColorHighlight="@android:color/transparent"
+            android:popupBackground="@android:color/transparent"
+        />
 
 
         <Button
@@ -70,7 +86,7 @@
             android:fontFamily="@font/commissioner_black"
             android:textColor="#ffffff"
             android:textAllCaps="false"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:background="@drawable/default_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -88,6 +104,7 @@
             android:fontFamily="@font/commissioner_medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:textAlignment="center"
             app:layout_constraintTop_toTopOf="parent">
         </TextView>
 

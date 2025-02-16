@@ -1,6 +1,6 @@
 package com.example.myapplication
 
-import android.app.Activity
+import QuizApi
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -15,8 +15,10 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.myapplication.helpers.AlarmReceiver
 import com.example.myapplication.helpers.BaseAuth
 import com.example.myapplication.interfaces.QuestionDto
@@ -24,23 +26,14 @@ import com.example.myapplication.interfaces.QuestionOptionDto
 import com.example.myapplication.interfaces.SaveResponseDto
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.MediaType.Companion.toMediaType
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.Response
 import java.io.IOException
 
-interface QuizCallback {
-    fun onUnsuccess()
-    fun onSuccess(responseBody: String)
-    fun onFailure()
-}
-
-class Quiz : Activity() {
+class Quiz : AppCompatActivity() {
 
     private val client = OkHttpClient()
 
@@ -64,13 +57,14 @@ class Quiz : Activity() {
 
     private var selectedAnswerIndex: Int = -1;
 
-    private lateinit var mainPersonIntent: Intent;
+    private lateinit var quizApi: QuizApi;
+
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
-
-        mainPersonIntent = Intent(this, MainPerson::class.java)
 
         prefs = this.getSharedPreferences("com.example.myapplication", Context.MODE_PRIVATE)
 
@@ -88,6 +82,8 @@ class Quiz : Activity() {
 
         credentials = BaseAuth.getCredentials(this);
 
+        quizApi = QuizApi(client, getString(R.string.server_ip), credentials);
+
         nextQuestionButton.setOnClickListener(View.OnClickListener {
             saveResponse()
         })
@@ -100,7 +96,8 @@ class Quiz : Activity() {
     }
 
     private fun endQuiz(){
-        startActivity(mainPersonIntent)
+        startActivity(Intent(this, SecondActivity::class.java))
+        finish()
     }
 
     private fun showLoader(){
@@ -127,61 +124,54 @@ class Quiz : Activity() {
         errorQuizLabel.visibility = View.INVISIBLE
     }
 
-    private fun saveResponse(){
-        if(selectedAnswerIndex === -1){
+
+    private fun saveResponse() {
+        if (selectedAnswerIndex == -1) {
             changeErrorVisibility(true)
             return
         }
 
-        var answer: QuestionOptionDto = currentQuestion.options[selectedAnswerIndex];
+        val answer: QuestionOptionDto = currentQuestion.options[selectedAnswerIndex]
 
-        saveUserResponse(answer.response_id, currentQuestion.pass_num,object : QuizCallback {
-            override fun onUnsuccess(){
-                runOnUiThread{
+        lifecycleScope.launch(ioDispatcher) {
+            try {
+                val responseBody = quizApi.saveUserResponse(answer.response_id, currentQuestion.pass_num)
 
-                }
-            }
-
-            override fun onSuccess(responseBody: String) {
-                runOnUiThread {
+                withContext(mainDispatcher) {
                     val gson = Gson()
                     try {
                         val response: SaveResponseDto = gson.fromJson(responseBody, SaveResponseDto::class.java)
 
-                        if (response.is_ended){
+                        Log.e("App error", response.is_ended.toString() + " " + answer.response_id.toString() + " " + currentQuestion.pass_num.toString())
+
+                        if (response.is_ended) {
                             generateNotification()
                             showEnd()
-                        }else{
+                        }else {
                             nextQuestion()
                         }
-                    } catch(e: Exception){
+                    } catch (e: Exception) {
                         Log.e("App error", "Save response: Ошибка парсинга JSON: ${e.message}")
                     }
                 }
-            }
-
-            override fun onFailure() {
-                runOnUiThread{
-
+            } catch (e: IOException) {
+                withContext(mainDispatcher) {
+                    Log.e("App error", "Ошибка сети при сохранении ответа: ${e.message}")
                 }
             }
-        })
+        }
     }
 
-    private fun nextQuestion(){
-        var answer: QuestionOptionDto = currentQuestion.options[selectedAnswerIndex];
+    private fun nextQuestion() {
+        val answer: QuestionOptionDto = currentQuestion.options[selectedAnswerIndex]
 
-        showLoader();
+        showLoader()
 
-        sendNextQuestionResponse(answer.next_question_id, object : QuizCallback {
-            override fun onUnsuccess(){
-                runOnUiThread{
+        lifecycleScope.launch(ioDispatcher) {
+            try {
+                val responseBody = quizApi.sendNextQuestionResponse(answer.next_question_id)
 
-                }
-            }
-
-            override fun onSuccess(responseBody: String) {
-                runOnUiThread {
+                withContext(mainDispatcher) {
                     val gson = Gson()
                     try {
                         currentQuestion = gson.fromJson(responseBody, QuestionDto::class.java)
@@ -189,65 +179,56 @@ class Quiz : Activity() {
                         selectedAnswerIndex = -1
 
                         displayQuestion()
-
                         hideLoader()
                         changeErrorVisibility(false)
                     } catch (e: Exception) {
                         Log.e("App error", "Next question: Ошибка парсинга JSON: ${e.message}")
                     }
                 }
-            }
-
-            override fun onFailure() {
-                runOnUiThread{
-
+            } catch (e: IOException) {
+                withContext(mainDispatcher) {
+                    hideLoader()
+                    Log.e("App error", "Ошибка сети при получении следующего вопроса: ${e.message}")
                 }
             }
-        })
+        }
     }
 
     private fun generateNotification(){
-          var quizTimeAllow: Long = System.currentTimeMillis() + 10000;
+          val quizTimeAllow: Long = System.currentTimeMillis() + 10000;
           prefs.edit().putLong("quiz_time_allow", quizTimeAllow).commit()
           AlarmReceiver.scheduleNotification(this, System.currentTimeMillis() + 10000)
     }
 
-    private fun startQuiz(){
+    private fun startQuiz() {
         showLoader()
 
-        sendStartQuizResponse(object : QuizCallback {
-            override fun onUnsuccess(){
-                runOnUiThread{
+        lifecycleScope.launch(ioDispatcher) {
+            try {
+                val responseBody = quizApi.sendStartQuizResponse()
 
-                }
-            }
-
-            override fun onSuccess(responseBody: String) {
-                runOnUiThread {
+                withContext(mainDispatcher) {
                     val gson = Gson()
                     try {
                         currentQuestion = gson.fromJson(responseBody, QuestionDto::class.java)
-
                         displayQuestion()
-
                         hideLoader()
                     } catch (e: Exception) {
                         Log.e("App error", "Start quiz: Ошибка парсинга JSON: ${e.message}")
                     }
                 }
-            }
-
-            override fun onFailure() {
-                runOnUiThread{
-
+            } catch (e: IOException) {
+                withContext(mainDispatcher) {
+                    hideLoader()
+                    Log.e("App error", "Ошибка сети при запуске quiz: ${e.message}")
                 }
             }
-        })
+        }
     }
 
-    fun displayQuestion() {
+    private fun displayQuestion() {
 
-        var imageURL = "${getString(R.string.server_ip)}/public/" + currentQuestion.img_name;
+        val imageURL = "${getString(R.string.server_ip)}/public/" + currentQuestion.img_name;
         Picasso.get()
             .load(imageURL)
             .into(mainQuizImage)
@@ -258,7 +239,7 @@ class Quiz : Activity() {
 
         answersContainer.removeAllViews()
 
-        var answersRadioGroup = RadioGroup(applicationContext)
+        val answersRadioGroup = RadioGroup(applicationContext)
 
         questionLabel.text = "Выберите один вариант ответа."
         for ((index, option) in currentQuestion.options.withIndex()) {
@@ -280,89 +261,5 @@ class Quiz : Activity() {
             answersRadioGroup.addView(newRadio)
         }
         answersContainer.addView(answersRadioGroup)
-    }
-
-    private fun saveUserResponse(responseId: Int, passNum: Int, callback: QuizCallback){
-        val media = "application/json; charset=utf-8".toMediaType()
-        val body = ("{\"response_id\": $responseId," +
-                     "\"pass_num\": $passNum}").toRequestBody(media)
-
-        val request = Request.Builder()
-            .url("${getString(R.string.server_ip)}/api/user/response/save")
-            .header("Authorization", credentials)
-            .post(body)
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                callback.onFailure()
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                response.use {
-                    if(!response.isSuccessful){
-                        callback.onUnsuccess()
-                        return
-                    }
-
-                    callback.onSuccess(response.body.string())
-                }
-            }
-        })
-    }
-
-    private fun sendNextQuestionResponse(nextQuestionId: Int, callback: QuizCallback) {
-        val media = "application/json; charset=utf-8".toMediaType()
-        val body = ("{\"question_id\": $nextQuestionId}").toRequestBody(media)
-
-        val request = Request.Builder()
-            .url("${getString(R.string.server_ip)}/api/questions/get")
-            .header("Authorization", credentials)
-            .post(body)
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                callback.onFailure()
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                response.use {
-                    if(!response.isSuccessful){
-                        Log.d("App error", response.message)
-                        callback.onUnsuccess()
-                        return
-                    }
-
-                    callback.onSuccess(response.body.string())
-                }
-            }
-        })
-    }
-
-    private fun sendStartQuizResponse(callback: QuizCallback) {
-
-        val request = Request.Builder()
-            .url("${getString(R.string.server_ip)}/api/questions/start")
-            .header("Authorization", credentials)
-            .post(RequestBody.create(null, "")) // Send an empty body
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                callback.onFailure()
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                response.use {
-                    if(!response.isSuccessful){
-                        callback.onUnsuccess()
-                        return
-                    }
-
-                    callback.onSuccess(response.body.string())
-                }
-            }
-        })
     }
 }

@@ -102,7 +102,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="20dp">
+            android:padding="10dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -116,7 +116,6 @@
                     android:text=""
                     android:gravity="left"
                     android:textAlignment="gravity"
-                    android:layout_marginTop="40dp"
                     android:fontFamily="@font/commissioner_black"
                     android:textSize="32dp"
                     android:textColor="@color/primary_black"

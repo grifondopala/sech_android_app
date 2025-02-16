@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">My Application</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="server_ip">http://192.168.50.84:8080</string>
+    <string name="app_name">ЧекАп: моё здоровье</string>
+    <string name="server_ip">http://185.72.145.208:8080</string>
 </resources>
