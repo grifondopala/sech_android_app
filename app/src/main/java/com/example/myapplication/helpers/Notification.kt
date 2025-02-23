@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.example.myapplication.R
 import com.example.myapplication.Quiz
 
@@ -32,17 +33,13 @@ class Notification {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
 
-            val pendingIntentFlags =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                } else {
-                    PendingIntent.FLAG_UPDATE_CURRENT
-                }
+            val pendingIntentFlags = PendingIntent.FLAG_UPDATE_CURRENT;
 
             val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, pendingIntentFlags)
 
             val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.icon_logo_75)
+                .setColor(ContextCompat.getColor(context, R.color.default_red))
                 .setContentTitle("Время проверить здоровье!")
                 .setContentText("Пройдите небольшой опрос, это не займет много времени")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)

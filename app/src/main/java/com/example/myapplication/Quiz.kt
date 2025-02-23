@@ -8,7 +8,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.View
+import android.view.View.TEXT_ALIGNMENT_GRAVITY
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RadioButton
@@ -22,7 +24,6 @@ import androidx.lifecycle.lifecycleScope
 import com.example.myapplication.helpers.AlarmReceiver
 import com.example.myapplication.helpers.BaseAuth
 import com.example.myapplication.interfaces.QuestionDto
-import com.example.myapplication.interfaces.QuestionOptionDto
 import com.example.myapplication.interfaces.SaveResponseDto
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
@@ -55,7 +56,8 @@ class Quiz : AppCompatActivity() {
 
     private lateinit var credentials: String;
 
-    private var selectedAnswerIndex: Int = -1;
+    private var responseIndexes = mutableListOf<Int>()
+    private var passNum: Int = 1;
 
     private lateinit var quizApi: QuizApi;
 
@@ -126,23 +128,23 @@ class Quiz : AppCompatActivity() {
 
 
     private fun saveResponse() {
-        if (selectedAnswerIndex == -1) {
+        if (responseIndexes.size == 0) {
             changeErrorVisibility(true)
             return
         }
 
-        val answer: QuestionOptionDto = currentQuestion.options[selectedAnswerIndex]
+        val responseIds: MutableList<Int> = responseIndexes.map { index ->
+            currentQuestion.options[index].response_id
+        }.toMutableList()
 
         lifecycleScope.launch(ioDispatcher) {
             try {
-                val responseBody = quizApi.saveUserResponse(answer.response_id, currentQuestion.pass_num)
+                val responseBody = quizApi.saveUserResponse(responseIds, passNum)
 
                 withContext(mainDispatcher) {
                     val gson = Gson()
                     try {
                         val response: SaveResponseDto = gson.fromJson(responseBody, SaveResponseDto::class.java)
-
-                        Log.e("App error", response.is_ended.toString() + " " + answer.response_id.toString() + " " + currentQuestion.pass_num.toString())
 
                         if (response.is_ended) {
                             generateNotification()
@@ -163,20 +165,20 @@ class Quiz : AppCompatActivity() {
     }
 
     private fun nextQuestion() {
-        val answer: QuestionOptionDto = currentQuestion.options[selectedAnswerIndex]
+        val next_question_id = currentQuestion.options[responseIndexes[0]].next_question_id;
 
         showLoader()
 
         lifecycleScope.launch(ioDispatcher) {
             try {
-                val responseBody = quizApi.sendNextQuestionResponse(answer.next_question_id)
+                val responseBody = quizApi.sendNextQuestionResponse(next_question_id)
 
                 withContext(mainDispatcher) {
                     val gson = Gson()
                     try {
                         currentQuestion = gson.fromJson(responseBody, QuestionDto::class.java)
 
-                        selectedAnswerIndex = -1
+                        responseIndexes = mutableListOf()
 
                         displayQuestion()
                         hideLoader()
@@ -211,6 +213,7 @@ class Quiz : AppCompatActivity() {
                     val gson = Gson()
                     try {
                         currentQuestion = gson.fromJson(responseBody, QuestionDto::class.java)
+                        passNum = currentQuestion.pass_num
                         displayQuestion()
                         hideLoader()
                     } catch (e: Exception) {
@@ -227,8 +230,8 @@ class Quiz : AppCompatActivity() {
     }
 
     private fun displayQuestion() {
-
-        val imageURL = "${getString(R.string.server_ip)}/public/" + currentQuestion.img_name;
+        val timestamp = System.currentTimeMillis()
+        val imageURL = "${getString(R.string.server_ip)}/public/questions/" + currentQuestion.img_name + "?timestamp=$timestamp"
         Picasso.get()
             .load(imageURL)
             .into(mainQuizImage)
@@ -239,27 +242,60 @@ class Quiz : AppCompatActivity() {
 
         answersContainer.removeAllViews()
 
-        val answersRadioGroup = RadioGroup(applicationContext)
+        if (currentQuestion.is_multiple_choice) {
+            questionLabel.text = "Можно выбрать несколько вариантов ответа."
 
-        questionLabel.text = "Выберите один вариант ответа."
-        for ((index, option) in currentQuestion.options.withIndex()) {
-            val newRadio = RadioButton(applicationContext)
+            val answersLinearLayout = LinearLayout(applicationContext)
+            answersLinearLayout.orientation = LinearLayout.VERTICAL
 
-            newRadio.text = option.response_text
-            newRadio.textSize = 24F
-            newRadio.typeface = typeface
+            for ((index, option) in currentQuestion.options.withIndex()) {
+                val newCheckbox = CheckBox(applicationContext)
 
-            newRadio.gravity = Gravity.CENTER_VERTICAL
-            newRadio.setPadding(16, 0, 0, 8)
+                newCheckbox.text = option.response_text
+                newCheckbox.textSize = 24F
+                newCheckbox.typeface = typeface
 
-            newRadio.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    selectedAnswerIndex = index;
+                newCheckbox.gravity = Gravity.CENTER_VERTICAL
+                newCheckbox.textAlignment = TEXT_ALIGNMENT_GRAVITY
+                newCheckbox.setPadding(16, 0, 0, 24)
+
+                newCheckbox.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) {
+                        responseIndexes.add(index)
+                    } else {
+                        responseIndexes.remove(index)
+                    }
                 }
+
+                answersLinearLayout.addView(newCheckbox)
             }
 
-            answersRadioGroup.addView(newRadio)
+            answersContainer.addView(answersLinearLayout)
+        } else {
+            questionLabel.text = "Выберите один вариант ответа."
+
+            val answersRadioGroup = RadioGroup(applicationContext)
+
+            for ((index, option) in currentQuestion.options.withIndex()) {
+                val newRadio = RadioButton(applicationContext)
+
+                newRadio.text = option.response_text
+                newRadio.textSize = 24F
+                newRadio.typeface = typeface
+
+                newRadio.gravity = Gravity.CENTER_VERTICAL
+                newRadio.setPadding(16, 0, 0, 24)
+
+                newRadio.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) {
+                        responseIndexes = mutableListOf(index);
+                    }
+                }
+
+                answersRadioGroup.addView(newRadio)
+            }
+
+            answersContainer.addView(answersRadioGroup)
         }
-        answersContainer.addView(answersRadioGroup)
     }
 }

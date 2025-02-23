@@ -1,3 +1,4 @@
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.*
@@ -56,10 +57,13 @@ class QuizApi(private val client: OkHttpClient, private val serverIp: String, pr
     }
 
     @Throws(IOException::class)
-    suspend fun saveUserResponse(responseId: Int, passNum: Int): String {
+    suspend fun saveUserResponse(responseIds: MutableList<Int>, passNum: Int): String {
         return withContext(Dispatchers.IO) {
             val mediaType = "application/json; charset=utf-8".toMediaType()
-            val body = ("{\"response_id\": $responseId," +
+            val responseIdsStr = responseIds.joinToString(prefix = "[", separator = ",", postfix = "]")
+
+            Log.d("App error", responseIdsStr)
+            val body = ("{\"response_ids\": $responseIdsStr," +
                     "\"pass_num\": $passNum}").toRequestBody(mediaType)
 
             val request = Request.Builder()

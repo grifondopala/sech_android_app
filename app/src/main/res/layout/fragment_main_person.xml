@@ -23,14 +23,13 @@
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Главная"
-                android:textSize="32dp"
-                android:textStyle="bold"
-                android:fontFamily="@font/commissioner_medium"
                 android:textColor="@color/primary_black"
-                android:layout_weight="1" />
+                android:textSize="32sp"
+                android:textStyle="bold" />
 
 
         </LinearLayout>
@@ -41,12 +40,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Пройти опрос"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textAllCaps="false"
             android:height="50dp"
             android:textColor="#ffffff"
             android:background="@drawable/default_button"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:fontFamily="@font/commissioner_black"

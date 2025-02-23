@@ -7,7 +7,11 @@ data class QuestionOptionDto(
     val next_question_id: Int,
 )
 
-data class QuestionDto(val img_name: String, val question_text: String, val pass_num: Int, val options: Array<QuestionOptionDto>) {
-
-}
+data class QuestionDto(
+    val img_name: String,
+    val is_multiple_choice: Boolean,
+    val question_text: String,
+    val pass_num: Int,
+    val options: Array<QuestionOptionDto>
+)
 

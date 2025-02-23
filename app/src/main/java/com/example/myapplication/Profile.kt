@@ -147,7 +147,7 @@ class Profile : Fragment() {
 
     private fun DisplayAvatar() {
         val timestamp = System.currentTimeMillis()
-        val imageURL = "${getString(R.string.server_ip)}/public/" + userInfo.avatar + "?timestamp=$timestamp"
+        val imageURL = "${getString(R.string.server_ip)}/public/avatars/" + userInfo.avatar + "?timestamp=$timestamp"
 
         Picasso.get()
             .load(imageURL)
