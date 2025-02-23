@@ -23,6 +23,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.myapplication.helpers.AlarmReceiver
 import com.example.myapplication.helpers.BaseAuth
+import com.example.myapplication.helpers.Notification
 import com.example.myapplication.interfaces.QuestionDto
 import com.example.myapplication.interfaces.SaveResponseDto
 import com.google.gson.Gson
@@ -143,12 +144,19 @@ class Quiz : AppCompatActivity() {
 
                 withContext(mainDispatcher) {
                     val gson = Gson()
+
                     try {
-                        val response: SaveResponseDto = gson.fromJson(responseBody, SaveResponseDto::class.java)
+                        val response = gson.fromJson(responseBody, SaveResponseDto::class.java)
 
                         if (response.is_ended) {
-                            generateNotification()
                             showEnd()
+
+                            try {
+                                generateNotification()
+                            } catch (e: Error){
+                                Log.d("App error", "Error while schedule notification")
+                            }
+
                         }else {
                             nextQuestion()
                         }
@@ -197,9 +205,11 @@ class Quiz : AppCompatActivity() {
     }
 
     private fun generateNotification(){
-          val quizTimeAllow: Long = System.currentTimeMillis() + 10000;
-          prefs.edit().putLong("quiz_time_allow", quizTimeAllow).commit()
-          AlarmReceiver.scheduleNotification(this, System.currentTimeMillis() + 10000)
+         if (AlarmReceiver.canScheduleExactAlarms(this)){
+             val quizTimeAllow: Long = System.currentTimeMillis() + 10000;
+             prefs.edit().putLong("quiz_time_allow", quizTimeAllow).commit()
+             AlarmReceiver.scheduleNotification(this, System.currentTimeMillis() + 10000)
+         }
     }
 
     private fun startQuiz() {
