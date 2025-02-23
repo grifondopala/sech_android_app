@@ -244,6 +244,8 @@ class Quiz : AppCompatActivity() {
         val imageURL = "${getString(R.string.server_ip)}/public/questions/" + currentQuestion.img_name + "?timestamp=$timestamp"
         Picasso.get()
             .load(imageURL)
+            .placeholder(R.drawable.loading)
+            .noFade()
             .into(mainQuizImage)
 
         questionText.text = currentQuestion.question_text;

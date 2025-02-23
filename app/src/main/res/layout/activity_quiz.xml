@@ -147,7 +147,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/heart" />
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/loading" />
 
                 </androidx.cardview.widget.CardView>
 

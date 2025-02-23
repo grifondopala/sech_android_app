@@ -45,7 +45,7 @@ class Notification {
                 .setSmallIcon(R.drawable.icon_logo_75)
                 .setColor(ContextCompat.getColor(context, R.color.default_red))
                 .setContentTitle("Время проверить здоровье!")
-                .setContentText("Пройдите небольшой опрос, это не займет много времени")
+                .setContentText("Пройдите небольшой опрос, это не займет много времени.")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
