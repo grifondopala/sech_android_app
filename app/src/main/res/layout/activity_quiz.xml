@@ -140,6 +140,7 @@
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintTop_toBottomOf="@id/question_label"
                     android:layout_marginTop="10dp"
+                    app:cardElevation="0dp"
                     app:cardCornerRadius="16dp">
 
                     <ImageView

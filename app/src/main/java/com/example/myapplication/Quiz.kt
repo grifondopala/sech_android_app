@@ -247,6 +247,7 @@ class Quiz : AppCompatActivity() {
         Picasso.get()
             .load(imageURL)
             .placeholder(R.drawable.loading)
+            .error(R.drawable.error)
             .noFade()
             .into(mainQuizImage)
 

@@ -42,12 +42,12 @@ class MainPerson : Fragment() {
         credentials = BaseAuth.getCredentials(view.context);
         mainPersonApi = MainPersonApi(client, getString(R.string.server_ip), credentials);
 
-        LoadQuizList(view)
+        loadQuizList(view)
 
         return view
     }
 
-    private fun LoadQuizList(view: View){
+    private fun loadQuizList(view: View){
         lifecycleScope.launch(ioDispatcher) {
             try {
                 val responseBody = mainPersonApi.loadQuizList()
@@ -56,7 +56,7 @@ class MainPerson : Fragment() {
                     val gson = Gson()
                     try {
                         quizList = gson.fromJson(responseBody, QuizListDto::class.java)
-                        DisplayQuizList(view)
+                        displayQuizList(view)
                     } catch (e: Exception) {
                         Log.e("App error", "Quiz list: Ошибка парсинга JSON: ${e.message}")
                     }
@@ -69,7 +69,7 @@ class MainPerson : Fragment() {
         }
     }
 
-    private fun DisplayQuizList(view: View){
+    private fun displayQuizList(view: View){
         val quizListLayout: LinearLayout = view.findViewById(R.id.quizList)
 
         for (quizItem in quizList.list) {
@@ -83,7 +83,7 @@ class MainPerson : Fragment() {
             descriptionTextView.text = quizItem.description
 
             cardView.setOnClickListener(View.OnClickListener {
-                var intent = Intent(activity, Quiz::class.java)
+                val intent = Intent(activity, Quiz::class.java)
                 intent.putExtra("quizId", quizItem.quiz_id);
                 startActivity(intent)
             })
