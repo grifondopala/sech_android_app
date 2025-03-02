@@ -15,8 +15,6 @@ import com.google.android.material.navigation.NavigationBarView
 
 class SecondActivity : FragmentActivity() {
 
-    private lateinit var token: String;
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second);
@@ -24,12 +22,7 @@ class SecondActivity : FragmentActivity() {
         val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigation.selectedItemId = R.id.item_1
 
-        val prefs: SharedPreferences = this.getSharedPreferences("com.example.myapplication", Context.MODE_PRIVATE)
-        token = prefs.getString("token", "false").toString()
-
-        val isDoctor: Boolean = token == "2"
-
-        val adapter = MyAdapter(supportFragmentManager, isDoctor)
+        val adapter = MyAdapter(supportFragmentManager)
         val viewPager = findViewById<ViewPager>(R.id.viewPager)
         viewPager.adapter = adapter
         viewPager.setCurrentItem(0)
@@ -57,14 +50,14 @@ class SecondActivity : FragmentActivity() {
     }
 
 
-    class MyAdapter internal constructor(fm: FragmentManager, private var isDoctor: Boolean) : FragmentPagerAdapter(fm) {
+    class MyAdapter internal constructor(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         override fun getCount(): Int {
             return 2
         }
 
         override fun getItem(position: Int): Fragment {
             return when (position) {
-                0 -> if(isDoctor) MainDoctor() else MainPerson()
+                0 -> MainPerson()
                 1 -> Profile()
                 else -> MainPerson()
             }

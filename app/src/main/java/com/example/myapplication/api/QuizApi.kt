@@ -9,10 +9,10 @@ import java.io.IOException
 class QuizApi(private val client: OkHttpClient, private val serverIp: String, private val credentials: String) {
 
     @Throws(IOException::class)
-    suspend fun sendStartQuizResponse(): String {
+    suspend fun sendStartQuizResponse(quizId: Int): String {
         return withContext(Dispatchers.IO) {
             val request = Request.Builder()
-                .url("$serverIp/api/questions/start")
+                .url("$serverIp/api/questions/start?QuizId=$quizId")
                 .header("Authorization", credentials)
                 .post(RequestBody.create(null, ""))
                 .build()
@@ -31,16 +31,13 @@ class QuizApi(private val client: OkHttpClient, private val serverIp: String, pr
         }
     }
 
-    @Throws(IOException::class) //  Указываем возможные исключения
-    suspend fun sendNextQuestionResponse(nextQuestionId: Int): String {
-        return withContext(Dispatchers.IO) { // Выполняем в IO потоке
-            val mediaType = "application/json; charset=utf-8".toMediaType()
-            val body = ("{\"question_id\": $nextQuestionId}").toRequestBody(mediaType)
-
+    @Throws(IOException::class)
+    suspend fun sendNextQuestionResponse(nextQuestionId: Int, quizId: Int): String {
+        return withContext(Dispatchers.IO) {
             val request = Request.Builder()
-                .url("$serverIp/api/questions/get")
+                .url("$serverIp/api/questions/get?QuestionId=$nextQuestionId&QuizId=$quizId")
                 .header("Authorization", credentials)
-                .post(body)
+                .get()
                 .build()
 
             val response = client.newCall(request).execute()
@@ -57,14 +54,13 @@ class QuizApi(private val client: OkHttpClient, private val serverIp: String, pr
     }
 
     @Throws(IOException::class)
-    suspend fun saveUserResponse(responseIds: MutableList<Int>, passNum: Int): String {
+    suspend fun saveUserResponse(responseIds: MutableList<Int>, passNum: Int, quizId: Int): String {
         return withContext(Dispatchers.IO) {
             val mediaType = "application/json; charset=utf-8".toMediaType()
             val responseIdsStr = responseIds.joinToString(prefix = "[", separator = ",", postfix = "]")
 
-            Log.d("App error", responseIdsStr)
             val body = ("{\"response_ids\": $responseIdsStr," +
-                    "\"pass_num\": $passNum}").toRequestBody(mediaType)
+                    "\"pass_num\": $passNum," + "\"quiz_id\": $quizId}").toRequestBody(mediaType)
 
             val request = Request.Builder()
                 .url("$serverIp/api/user/response/save")

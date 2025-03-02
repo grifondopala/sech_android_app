@@ -47,7 +47,7 @@ class ProfileApi(private val client: OkHttpClient, private val serverIp: String,
     suspend fun sendLoadProfileResponse(): String {
         return withContext(Dispatchers.IO) {
             val request = Request.Builder()
-                .url("$serverIp/api/user/info/patient")
+                .url("$serverIp/api/user/info/get")
                 .header("Authorization", credentials)
                 .get()
                 .build()

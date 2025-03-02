@@ -54,6 +54,7 @@ class Quiz : AppCompatActivity() {
     private lateinit var quizEndLayout: LinearLayout;
 
     private lateinit var currentQuestion: QuestionDto;
+    private var quizId = 1;
 
     private lateinit var credentials: String;
 
@@ -68,6 +69,8 @@ class Quiz : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
+
+        quizId = intent.getIntExtra("quizId", 1)
 
         prefs = this.getSharedPreferences("com.example.myapplication", Context.MODE_PRIVATE)
 
@@ -84,7 +87,6 @@ class Quiz : AppCompatActivity() {
         mainQuizImage = findViewById(R.id.quiz_main_image)
 
         credentials = BaseAuth.getCredentials(this);
-
         quizApi = QuizApi(client, getString(R.string.server_ip), credentials);
 
         nextQuestionButton.setOnClickListener(View.OnClickListener {
@@ -140,7 +142,7 @@ class Quiz : AppCompatActivity() {
 
         lifecycleScope.launch(ioDispatcher) {
             try {
-                val responseBody = quizApi.saveUserResponse(responseIds, passNum)
+                val responseBody = quizApi.saveUserResponse(responseIds, passNum, quizId)
 
                 withContext(mainDispatcher) {
                     val gson = Gson()
@@ -173,13 +175,13 @@ class Quiz : AppCompatActivity() {
     }
 
     private fun nextQuestion() {
-        val next_question_id = currentQuestion.options[responseIndexes[0]].next_question_id;
+        val nextQuestionId = currentQuestion.options[responseIndexes[0]].next_question_id;
 
         showLoader()
 
         lifecycleScope.launch(ioDispatcher) {
             try {
-                val responseBody = quizApi.sendNextQuestionResponse(next_question_id)
+                val responseBody = quizApi.sendNextQuestionResponse(nextQuestionId, quizId)
 
                 withContext(mainDispatcher) {
                     val gson = Gson()
@@ -217,7 +219,7 @@ class Quiz : AppCompatActivity() {
 
         lifecycleScope.launch(ioDispatcher) {
             try {
-                val responseBody = quizApi.sendStartQuizResponse()
+                val responseBody = quizApi.sendStartQuizResponse(quizId)
 
                 withContext(mainDispatcher) {
                     val gson = Gson()
