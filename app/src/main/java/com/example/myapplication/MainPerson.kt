@@ -112,9 +112,10 @@ class MainPerson : Fragment() {
 
     private fun transformUtcTimeToLocalFormattedString(utcTimeString: String): String? {
         try {
-            val utcFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'", Locale.getDefault())
+            val partTime = utcTimeString.substring(0, 19)
+            val utcFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
             utcFormat.timeZone = TimeZone.getTimeZone("UTC")
-            val date = utcFormat.parse(utcTimeString) ?: return null
+            val date = utcFormat.parse(partTime) ?: return null
 
             val localFormat = SimpleDateFormat("HH:mm dd.MM.yyyy", Locale.getDefault())
             localFormat.timeZone = TimeZone.getDefault()

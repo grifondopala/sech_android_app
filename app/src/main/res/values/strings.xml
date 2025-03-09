@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">ЧекАп: моё здоровье</string>
-    <string name="server_ip">http://192.168.68.123:8080</string>
+    <string name="server_ip">http://192.168.68.128:8080</string>
 </resources>
