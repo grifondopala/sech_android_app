@@ -7,13 +7,19 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import java.util.Calendar
 
 class AlarmReceiver : BroadcastReceiver() {
     companion object{
         @SuppressLint("ScheduleExactAlarm")
-        fun scheduleNotification(context: Context, timeInMillis: Long) {
+        fun scheduleNotification(context: Context, timeToPassAgain: Long, quizId: Int, name: String) {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val intent = Intent(context, AlarmReceiver::class.java)
+            val intent = Intent(context, AlarmReceiver::class.java).apply {
+                putExtra("quizId", quizId)
+                putExtra("name", name)
+                putExtra("timeToPassAgain", timeToPassAgain)
+            }
+            val timeInMillis = Calendar.getInstance().timeInMillis + timeToPassAgain
             val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent)
@@ -29,8 +35,11 @@ class AlarmReceiver : BroadcastReceiver() {
         }
     }
     override fun onReceive(context: Context?, intent: Intent?) {
-        if (context != null) {
-            Notification.sendNotification(context)
+        if (context != null && intent != null) {
+            val quizId = intent.getIntExtra("quizId", 1);
+            val name = intent.getStringExtra("name").toString();
+            val timeToPassAgain = intent.getLongExtra("timeToPassAgain", 50000)
+            Notification.sendNotification(context, quizId, name, timeToPassAgain)
         }
     }
 }

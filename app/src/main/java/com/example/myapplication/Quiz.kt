@@ -23,10 +23,10 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.myapplication.helpers.AlarmReceiver
 import com.example.myapplication.helpers.BaseAuth
-import com.example.myapplication.helpers.Notification
 import com.example.myapplication.interfaces.QuestionDto
 import com.example.myapplication.interfaces.SaveResponseDto
 import com.google.gson.Gson
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -55,6 +55,8 @@ class Quiz : AppCompatActivity() {
 
     private lateinit var currentQuestion: QuestionDto;
     private var quizId = 1;
+    private var timeToPassAgain: Long = 50000;
+    private var name = "";
 
     private lateinit var credentials: String;
 
@@ -71,6 +73,8 @@ class Quiz : AppCompatActivity() {
         setContentView(R.layout.activity_quiz)
 
         quizId = intent.getIntExtra("quizId", 1)
+        timeToPassAgain = intent.getLongExtra("timeToPassAgain", 50000)
+        name = intent.getStringExtra("name").toString()
 
         prefs = this.getSharedPreferences("com.example.myapplication", Context.MODE_PRIVATE)
 
@@ -191,8 +195,6 @@ class Quiz : AppCompatActivity() {
                         responseIndexes = mutableListOf()
 
                         displayQuestion()
-                        hideLoader()
-                        changeErrorVisibility(false)
                     } catch (e: Exception) {
                         Log.e("App error", "Next question: Ошибка парсинга JSON: ${e.message}")
                     }
@@ -208,9 +210,7 @@ class Quiz : AppCompatActivity() {
 
     private fun generateNotification(){
          if (AlarmReceiver.canScheduleExactAlarms(this)){
-             val quizTimeAllow: Long = System.currentTimeMillis() + 10000;
-             prefs.edit().putLong("quiz_time_allow", quizTimeAllow).commit()
-             AlarmReceiver.scheduleNotification(this, System.currentTimeMillis() + 10000)
+             AlarmReceiver.scheduleNotification(this, timeToPassAgain, quizId, name)
          }
     }
 
@@ -227,7 +227,6 @@ class Quiz : AppCompatActivity() {
                         currentQuestion = gson.fromJson(responseBody, QuestionDto::class.java)
                         passNum = currentQuestion.pass_num
                         displayQuestion()
-                        hideLoader()
                     } catch (e: Exception) {
                         Log.e("App error", "Start quiz: Ошибка парсинга JSON: ${e.message}")
                     }
@@ -242,15 +241,6 @@ class Quiz : AppCompatActivity() {
     }
 
     private fun displayQuestion() {
-        val timestamp = System.currentTimeMillis()
-        val imageURL = "${getString(R.string.server_ip)}/public/questions/" + currentQuestion.img_name + "?timestamp=$timestamp"
-        Picasso.get()
-            .load(imageURL)
-            .placeholder(R.drawable.loading)
-            .error(R.drawable.error)
-            .noFade()
-            .into(mainQuizImage)
-
         questionText.text = currentQuestion.question_text;
 
         val typeface = ResourcesCompat.getFont(this, R.font.commissioner_medium)
@@ -312,5 +302,23 @@ class Quiz : AppCompatActivity() {
 
             answersContainer.addView(answersRadioGroup)
         }
+
+        val imageURL = "${getString(R.string.server_ip)}/public/questions/" + currentQuestion.img_name
+        Picasso.get()
+            .load(imageURL)
+            .placeholder(R.drawable.loading)
+            .error(R.drawable.error)
+            .noFade()
+            .into(mainQuizImage, object : Callback {
+                override fun onSuccess() {
+                    hideLoader()
+                    changeErrorVisibility(false)
+                }
+
+                override fun onError(e: Exception?) {
+                    hideLoader()
+                    changeErrorVisibility(false)
+                }
+            })
     }
 }

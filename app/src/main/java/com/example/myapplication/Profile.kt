@@ -151,6 +151,7 @@ class Profile : Fragment() {
 
         Picasso.get()
             .load(imageURL)
+            .placeholder(R.drawable.loading)
             .error(R.drawable.default_avatar)
             .into(avatarImageView)
     }

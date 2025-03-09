@@ -1,6 +1,5 @@
 package com.example.myapplication.api
 
-import android.content.Context
 import com.example.myapplication.helpers.HttpException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

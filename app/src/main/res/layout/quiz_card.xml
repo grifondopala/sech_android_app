@@ -16,7 +16,7 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/cardTitle"
+            android:id="@+id/quizTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Опрос здоровья!"
@@ -25,14 +25,24 @@
             android:textColor="@color/primary_black"/>
 
         <TextView
-            android:id="@+id/cardText"
+            android:id="@+id/quizDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:text="Пройдите опрос"
             android:fontFamily="@font/commissioner_medium"
             android:textSize="16sp"
             android:textColor="@android:color/darker_gray"/>
+
+        <TextView
+            android:id="@+id/quizStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text=""
+            android:fontFamily="@font/commissioner_medium"
+            android:textSize="14sp"
+            android:gravity="start"/>
 
     </LinearLayout>
 

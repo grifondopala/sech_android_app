@@ -25,11 +25,14 @@ class Notification {
                 notificationManager.createNotificationChannel(channel);
             }
         }
-        fun sendNotification(context: Context){
+        fun sendNotification(context: Context, quizId: Int, name: String, timeToPassAgain: Long){
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             this.createNotificationChannel(context)
 
             val intent = Intent(context, Quiz::class.java).apply {
+                putExtra("quizId", quizId)
+                putExtra("timeToPassAgain", timeToPassAgain)
+                putExtra("name", name)
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
 
@@ -45,7 +48,7 @@ class Notification {
                 .setSmallIcon(R.drawable.icon_logo_75)
                 .setColor(ContextCompat.getColor(context, R.color.default_red))
                 .setContentTitle("Время проверить здоровье!")
-                .setContentText("Пройдите небольшой опрос, это не займет много времени.")
+                .setContentText("Пройдите опрос \"$name\", это не займет много времени.")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)

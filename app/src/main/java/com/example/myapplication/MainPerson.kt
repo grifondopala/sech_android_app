@@ -21,6 +21,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 class MainPerson : Fragment() {
 
@@ -72,23 +75,53 @@ class MainPerson : Fragment() {
     private fun displayQuizList(view: View){
         val quizListLayout: LinearLayout = view.findViewById(R.id.quizList)
 
-        for (quizItem in quizList.list) {
+        val sortedQuizList = quizList.list.sortedByDescending { it.is_available }
+
+        for (quizItem in sortedQuizList) {
             val cardView: CardView = LayoutInflater.from(view.context)
                 .inflate(R.layout.quiz_card, quizListLayout, false) as CardView
 
-            val titleTextView = cardView.findViewById<TextView>(R.id.cardTitle)
-            val descriptionTextView = cardView.findViewById<TextView>(R.id.cardText)
+            val titleTextView = cardView.findViewById<TextView>(R.id.quizTitle)
+            val descriptionTextView = cardView.findViewById<TextView>(R.id.quizDescription)
+            val statusTextView = cardView.findViewById<TextView>(R.id.quizStatus)
 
             titleTextView.text = quizItem.name
             descriptionTextView.text = quizItem.description
 
-            cardView.setOnClickListener(View.OnClickListener {
-                val intent = Intent(activity, Quiz::class.java)
-                intent.putExtra("quizId", quizItem.quiz_id);
-                startActivity(intent)
-            })
+            if (quizItem.is_available){
+                statusTextView.text = "Можно пройти прямо сейчас!"
+                statusTextView.setTextColor(resources.getColor(R.color.primary_black, null));
+                cardView.setOnClickListener(View.OnClickListener {
+                    val intent = Intent(activity, Quiz::class.java)
+                    intent.putExtra("quizId", quizItem.quiz_id);
+                    intent.putExtra("timeToPassAgain", quizItem.time_to_pass_again);
+                    intent.putExtra("name", quizItem.name);
+                    startActivity(intent)
+                })
+            } else {
+                val time = transformUtcTimeToLocalFormattedString(quizItem.next_time_can);
+                if (time != null){
+                    statusTextView.text = "Нельзя пройти до ${time}!"
+                    statusTextView.setTextColor(resources.getColor(R.color.default_red, null));
+                }
+            }
 
             quizListLayout.addView(cardView)
+        }
+    }
+
+    private fun transformUtcTimeToLocalFormattedString(utcTimeString: String): String? {
+        try {
+            val utcFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'", Locale.getDefault())
+            utcFormat.timeZone = TimeZone.getTimeZone("UTC")
+            val date = utcFormat.parse(utcTimeString) ?: return null
+
+            val localFormat = SimpleDateFormat("HH:mm dd.MM.yyyy", Locale.getDefault())
+            localFormat.timeZone = TimeZone.getDefault()
+            return localFormat.format(date)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
         }
     }
 
