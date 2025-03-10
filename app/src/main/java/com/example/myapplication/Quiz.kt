@@ -303,7 +303,7 @@ class Quiz : AppCompatActivity() {
             answersContainer.addView(answersRadioGroup)
         }
 
-        val imageURL = "${getString(R.string.server_ip)}/public/questions/" + currentQuestion.img_name
+        val imageURL = "${getString(R.string.server_ip)}/api/static/public/questions/" + currentQuestion.img_name
         Picasso.get()
             .load(imageURL)
             .placeholder(R.drawable.loading)

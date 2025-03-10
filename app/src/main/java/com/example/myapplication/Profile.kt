@@ -5,6 +5,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -27,7 +30,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
+import java.io.ByteArrayOutputStream
 import java.io.IOException
+import java.io.InputStream
 
 
 class Profile : Fragment() {
@@ -110,10 +115,17 @@ class Profile : Fragment() {
                 selectedImageUri?.let { uri ->
                     lifecycleScope.launch(ioDispatcher) {
                         try {
-                            val responseBody = profileApi.sendUploadAvatarResponse(uri)
+                            val compressedImageByteArray = compressImage(uri)
 
-                            withContext(mainDispatcher) {
-                                DisplayAvatar()
+                            if (compressedImageByteArray != null) {
+                                val responseBody =
+                                    profileApi.sendUploadAvatarResponse(compressedImageByteArray)
+
+                                withContext(mainDispatcher) {
+                                    val bitmap = BitmapFactory.decodeByteArray(compressedImageByteArray, 0, compressedImageByteArray.size)
+
+                                    avatarImageView.setImageBitmap(bitmap)
+                                }
                             }
                         } catch (e: Exception) {
                             Log.e("App error", "Ошибка при загрузке аватара: ${e.message}")
@@ -126,6 +138,21 @@ class Profile : Fragment() {
             }
 
         loadProfile()
+    }
+
+    private fun compressImage(imageUri: Uri): ByteArray? {
+        return try {
+            val inputStream: InputStream? = activity?.contentResolver?.openInputStream(imageUri)
+            val bitmap = BitmapFactory.decodeStream(inputStream)
+
+            val outputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, outputStream)
+
+            outputStream.toByteArray()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
     private fun pickImageFromGallery() {
@@ -147,7 +174,7 @@ class Profile : Fragment() {
 
     private fun DisplayAvatar() {
         val timestamp = System.currentTimeMillis()
-        val imageURL = "${getString(R.string.server_ip)}/public/avatars/" + userInfo.avatar + "?timestamp=$timestamp"
+        val imageURL = "${getString(R.string.server_ip)}/api/static/public/avatars/" + userInfo.avatar + "?timestamp=$timestamp"
 
         Picasso.get()
             .load(imageURL)
