@@ -28,11 +28,12 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".Auth" />
-        <activity android:name=".SecondActivity" />
-        <activity android:name=".Quiz" />
+        <activity android:name=".Auth" android:screenOrientation="portrait"/>
+        <activity android:name=".SecondActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Quiz" android:screenOrientation="portrait"/>
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.MyApplication">
@@ -43,5 +44,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>
