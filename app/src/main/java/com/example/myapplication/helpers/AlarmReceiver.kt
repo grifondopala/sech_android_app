@@ -20,7 +20,7 @@ class AlarmReceiver : BroadcastReceiver() {
                 putExtra("timeToPassAgain", timeToPassAgain)
             }
             val timeInMillis = Calendar.getInstance().timeInMillis + timeToPassAgain
-            val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent = PendingIntent.getBroadcast(context, quizId, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent)
         }
@@ -38,7 +38,7 @@ class AlarmReceiver : BroadcastReceiver() {
         if (context != null && intent != null) {
             val quizId = intent.getIntExtra("quizId", 1);
             val name = intent.getStringExtra("name").toString();
-            val timeToPassAgain = intent.getLongExtra("timeToPassAgain", 50000)
+            val timeToPassAgain = intent.getLongExtra("timeToPassAgain", 5000)
             Notification.sendNotification(context, quizId, name, timeToPassAgain)
         }
     }

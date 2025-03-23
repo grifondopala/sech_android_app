@@ -29,6 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:gravity="center"
+                android:visibility="invisible"
                 android:background="@drawable/default_button"
                 android:fontFamily="@font/commissioner_black"
                 android:text="Выйти"
@@ -253,35 +254,6 @@
 
                     </TextView>
                 </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    tools:ignore="MissingConstraints">
-
-                    <TextView
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:text="Снилс:"
-                        android:textSize="18sp"
-                        android:fontFamily="@font/commissioner_medium"/>
-
-                    <TextView
-                        android:id="@+id/profile_snils_text_view"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:text="-"
-                        android:textAlignment="textStart"
-                        android:textSize="18sp"
-                        android:fontFamily="@font/commissioner_regular"
-                        android:layout_height="wrap_content">
-
-                    </TextView>
-                </LinearLayout>
-
 
             </LinearLayout>
 

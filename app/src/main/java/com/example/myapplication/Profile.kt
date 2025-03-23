@@ -46,7 +46,6 @@ class Profile : Fragment() {
     private lateinit var firstNameTextField: TextView;
     private lateinit var middleNameTextField: TextView;
     private lateinit var lastNameTextField: TextView;
-    private lateinit var snilsTextField: TextView;
     private lateinit var phoneTextField: TextView;
     private lateinit var emailTextField: TextView;
 
@@ -94,7 +93,6 @@ class Profile : Fragment() {
         firstNameTextField = view.findViewById(R.id.profile_name_text_view);
         middleNameTextField = view.findViewById(R.id.profile_middle_name_text_view);
         lastNameTextField = view.findViewById(R.id.profile_last_name_text_view);
-        snilsTextField = view.findViewById(R.id.profile_snils_text_view);
         phoneTextField = view.findViewById(R.id.profile_phone_text_view);
         emailTextField = view.findViewById(R.id.profile_email_text_view);
         avatarImageView = view.findViewById(R.id.profile_avatar_image);
@@ -161,13 +159,12 @@ class Profile : Fragment() {
         uploadAvatarResultLauncher.launch(intent)
     }
 
-    private fun DispayPatientInfo(){
-        firstNameTextField.text = userInfo.first_name;
-        middleNameTextField.text = userInfo.middle_name;
-        lastNameTextField.text = userInfo.last_name;
-        phoneTextField.text = userInfo.phone;
-        emailTextField.text = userInfo.email;
-        snilsTextField.text = userInfo.snils;
+    private fun DispayPatientInfo() {
+        firstNameTextField.text = userInfo.first_name.ifBlank { "—" }
+        middleNameTextField.text = userInfo.middle_name.ifBlank { "—" }
+        lastNameTextField.text = userInfo.last_name.ifBlank { "—" }
+        phoneTextField.text = userInfo.phone.ifBlank { "—" }
+        emailTextField.text = userInfo.email.ifBlank { "—" }
 
         DisplayAvatar()
     }

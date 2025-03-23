@@ -42,7 +42,7 @@ class Notification {
                 PendingIntent.FLAG_UPDATE_CURRENT
             }
 
-            val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, pendingIntentFlags)
+            val pendingIntent: PendingIntent = PendingIntent.getActivity(context, quizId, intent, pendingIntentFlags)
 
             val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.icon_logo_75)
