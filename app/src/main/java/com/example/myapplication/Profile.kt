@@ -20,11 +20,11 @@ import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.example.myapplication.helpers.BaseAuth
 import com.example.myapplication.helpers.HttpException
 import com.example.myapplication.interfaces.PatientDto
 import com.google.gson.Gson
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -159,25 +159,26 @@ class Profile : Fragment() {
         uploadAvatarResultLauncher.launch(intent)
     }
 
-    private fun DispayPatientInfo() {
+    private fun displayPatientInfo() {
         firstNameTextField.text = userInfo.first_name.ifBlank { "—" }
         middleNameTextField.text = userInfo.middle_name.ifBlank { "—" }
         lastNameTextField.text = userInfo.last_name.ifBlank { "—" }
         phoneTextField.text = userInfo.phone.ifBlank { "—" }
         emailTextField.text = userInfo.email.ifBlank { "—" }
 
-        DisplayAvatar()
+         displayAvatar()
     }
 
-    private fun DisplayAvatar() {
-        val timestamp = System.currentTimeMillis()
-        val imageURL = "${getString(R.string.server_ip)}/api/static/public/avatars/" + userInfo.avatar + "?timestamp=$timestamp"
+    private fun displayAvatar() {
+        val imageURL = "${getString(R.string.server_ip)}/api/static/public/avatars/" + userInfo.avatar
 
-        Picasso.get()
-            .load(imageURL)
-            .placeholder(R.drawable.loading)
-            .error(R.drawable.default_avatar)
-            .into(avatarImageView)
+        context?.let {
+            Glide.with(it)
+                .load(imageURL)
+                .placeholder(R.drawable.loading)
+                .error(R.drawable.default_avatar)
+                .into(avatarImageView)
+        }
     }
 
     private fun loadProfile() {
@@ -188,7 +189,7 @@ class Profile : Fragment() {
                     val gson = Gson()
                     try {
                         userInfo = gson.fromJson(responseBody, PatientDto::class.java)
-                        DispayPatientInfo()
+                        displayPatientInfo()
                     } catch (e: Exception) {
                         Log.e("App error", "Profile: Ошибка парсинга JSON: ${e.message}")
                     }

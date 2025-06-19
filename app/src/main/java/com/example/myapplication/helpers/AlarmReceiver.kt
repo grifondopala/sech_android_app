@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import java.util.Calendar
 
 class AlarmReceiver : BroadcastReceiver() {
@@ -19,6 +20,7 @@ class AlarmReceiver : BroadcastReceiver() {
                 putExtra("name", name)
                 putExtra("timeToPassAgain", timeToPassAgain)
             }
+
             val timeInMillis = Calendar.getInstance().timeInMillis + timeToPassAgain
             val pendingIntent = PendingIntent.getBroadcast(context, quizId, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 

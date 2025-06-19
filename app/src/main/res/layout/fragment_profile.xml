@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:gravity="center"
-                android:visibility="invisible"
+                android:visibility="visible"
                 android:background="@drawable/default_button"
                 android:fontFamily="@font/commissioner_black"
                 android:text="Выйти"

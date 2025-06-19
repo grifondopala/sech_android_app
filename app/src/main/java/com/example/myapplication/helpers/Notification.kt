@@ -16,6 +16,7 @@ class Notification {
         private const val NOTIFICATION_ID = 44744889
         private const val CHANNEL_ID = "my_notification_channel"
         private const val CHANNEL_NAME = "Notification Channel"
+
         private fun createNotificationChannel(context: Context) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT).apply {

@@ -77,7 +77,7 @@ class Auth : AppCompatActivity() {
                         prefs.edit().putString("token", Credentials.basic(username, password)).apply()
                         prefs.edit().putBoolean("isAuth", true).apply()
 
-                        startActivity(Intent(this@Auth, SecondActivity::class.java)) //  Замените на вашу SecondActivity
+                        startActivity(Intent(this@Auth, SecondActivity::class.java))
                         finish()
                     } catch (e: Exception) {
                         Log.e("Auth", "Ошибка парсинга JSON: ${e.message}")

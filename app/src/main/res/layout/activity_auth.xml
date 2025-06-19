@@ -48,8 +48,6 @@
             android:padding="16dp"
             android:background="@drawable/edit_text_background"
             android:inputType="text"
-            android:textColorHighlight="@android:color/transparent"
-            android:popupBackground="@android:color/transparent"
         />
 
         <EditText
@@ -71,8 +69,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:textColorHighlight="@android:color/transparent"
-            android:popupBackground="@android:color/transparent"
         />
 
 
